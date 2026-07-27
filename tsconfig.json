@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@earendil-works/pi-tui": ["C:/Users/tikoy/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-tui"],
+      "@earendil-works/pi-ai": ["C:/Users/tikoy/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent/node_modules/@earendil-works/pi-ai"],
+      "@earendil-works/pi-coding-agent": ["C:/Users/tikoy/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent"],
+      "typebox": ["C:/Users/tikoy/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent/node_modules/typebox"]
+    },
+    "typeRoots": [
+      "C:/Users/tikoy/AppData/Roaming/npm/node_modules/@earendil-works/pi-coding-agent/node_modules/@types"
+    ],
+    "types": ["node"]
+  },
+  "include": ["index.ts", "src/**/*.ts"]
+}
