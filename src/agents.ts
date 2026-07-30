@@ -108,10 +108,20 @@ function findNearestProjectAgentsDir(cwd: string): string | null {
   }
 }
 
-export function discoverAgents(cwd: string, scope: AgentScope) {
-  const userDir = path.join(getAgentDir(), "agents");
-  const projectAgentsDir = findNearestProjectAgentsDir(cwd);
+export function discoverAgents(cwd: string, scope: AgentScope, customAgentsDir?: string | null) {
+  // Custom agentsDir overrides the default .pi/agents/ discovery.
+  // This lets skills (like REI) specify where their agents live.
+  // Relative paths are resolved against cwd so you can use paths like "../skills/rei/agents".
+  let projectAgentsDir: string | null = null;
+  if (customAgentsDir) {
+    projectAgentsDir = path.isAbsolute(customAgentsDir)
+      ? customAgentsDir
+      : path.resolve(cwd, customAgentsDir);
+  } else {
+    projectAgentsDir = findNearestProjectAgentsDir(cwd);
+  }
 
+  const userDir = path.join(getAgentDir(), "agents");
   const userAgents = scope === "project" ? [] : loadAgentsFromDir(userDir, "user");
   const projectAgents = scope === "user" || !projectAgentsDir ? [] : loadAgentsFromDir(projectAgentsDir, "project");
 

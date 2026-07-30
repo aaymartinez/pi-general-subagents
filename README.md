@@ -51,7 +51,7 @@ This extension provides a **mechanism** for spawning isolated Pi.dev subprocesse
 | **Session persistence** | Deterministic session hashing enables resume from last state |
 | **Hard block** | Subagents cannot spawn subagents (env var + sentinel file) |
 | **Event system** | `pipeline-events.json` for audit trail and state tracking |
-| **Agent discovery** | Scans `.pi/agents/*.md` (project) and `~/.pi/agent/agents/*.md` (user) |
+| **Agent discovery** | Scans `.pi/agents/*.md` (project) and `~/.pi/agent/agents/*.md` (user). Override with `agentsDir` in `.pi/subagents.json` to use relative or absolute paths like `"skills/rei/agents"` or `"../skills/rei/agents"` |
 | **Tiered timeouts** | Per-agent timeout, thinking level, and concurrency from settings |
 | **Evidence extraction** | Counts tool calls, file writes, bash commands from agent output |
 
@@ -147,6 +147,33 @@ Create `.pi/subagents.json` in your project to customize behavior:
 2. Per-agent setting in `subagents.json`
 3. Default from `subagents.json`
 4. Hardcoded default (600s timeout, "medium" thinking)
+
+### Custom Agents Directory
+
+Use `agentsDir` to point to a non-standard location for agent `.md` files. Relative paths are resolved against the project's `cwd`:
+
+```json
+{
+  "agentsDir": "skills/rei/agents",
+  "agents": {
+    "pm": { "timeout": 600, "thinking": "medium" },
+    "coder": { "timeout": 1800, "thinking": "medium" }
+  }
+}
+```
+
+**Path resolution:**
+
+| Value | Resolves to |
+|-------|-------------|
+| `"skills/rei/agents"` | `<cwd>/skills/rei/agents` |
+| `"../skills/rei/agents"` | `<parent>/skills/rei/agents` |
+| `"/absolute/path/to/agents"` | `/absolute/path/to/agents` |
+| `"../../other-skill/agents"` | `<grandparent>/other-skill/agents` |
+
+When `agentsDir` is set, agent discovery uses it **instead of** the default `.pi/agents/` directory. This is useful for skills that package their agents inside their own directory tree.
+
+**Default fallback:** If `agentsDir` is not set, the extension scans for `.pi/agents/` directories starting from `cwd` and walking up to the filesystem root.
 
 ### Model Assignment
 

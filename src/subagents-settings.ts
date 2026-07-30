@@ -42,6 +42,12 @@ export interface SubagentsSettings {
   agents: Record<string, AgentRuntimeConfig>;
   pipeline: PipelineConfig;
   defaults: DefaultConfig;
+  /**
+   * Override: directory where agent .md files live.
+   * If set, discoverAgents() loads from this path instead of .pi/agents/.
+   * Useful for skills that package agents inside their own directory tree.
+   */
+  agentsDir?: string;
 }
 
 const DEFAULTS: SubagentsSettings = {
@@ -97,6 +103,7 @@ export function loadSubagentsSettings(agentsDir: string | null): SubagentsSettin
         ...DEFAULTS.defaults,
         ...parsed.defaults,
       },
+      agentsDir: parsed.agentsDir,
     };
 
     return settingsCache;
