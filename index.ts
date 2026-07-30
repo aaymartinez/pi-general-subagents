@@ -225,13 +225,15 @@ export default function (pi: ExtensionAPI) {
 			const agentScope: AgentScope = params.agentScope ?? "project";
 
 			// ─── Load Runtime Settings First ─────────────────────────────
-			// Load settings from cwd's .pi/subagents.json to check for agentsDir override.
-			// This must happen before discoverAgents so custom agent directories are respected.
-			const settings = loadSubagentsSettings(ctx.cwd);
+			// Try params.cwd first (subprocess working dir), then fall back to ctx.cwd.
+			// This allows other workspaces to use their own subagents.json
+			// even when the main process is running from a different directory.
+			const discoveryCwd = params.cwd || ctx.cwd;
+			const settings = loadSubagentsSettings(discoveryCwd);
 			const customAgentsDir = settings.agentsDir || null;
 
 			const discovery = discoverAgents(
-				ctx.cwd,
+				discoveryCwd,
 				agentScope,
 				customAgentsDir,
 			);

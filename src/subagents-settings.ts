@@ -79,7 +79,7 @@ export function loadSubagentsSettings(agentsDir: string | null): SubagentsSettin
     return DEFAULTS;
   }
 
-  const settingsPath = path.join(path.dirname(agentsDir), "subagents.json");
+  const settingsPath = path.join(agentsDir, ".pi", "subagents.json");
   if (!fs.existsSync(settingsPath)) {
     settingsCache = DEFAULTS;
     return DEFAULTS;
